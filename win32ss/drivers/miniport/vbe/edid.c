@@ -263,6 +263,11 @@ VBEGetVideoChildDescriptor(
       *UId = 0;
       return VIDEO_ENUM_MORE_DEVICES; /* FIXME: not sure... */
    }
+   else if (ChildEnumInfo->ChildIndex != 1)
+   {
+       VideoPortDebugPrint(Info, "VBEMP: no multi-monitor support\n");
+       return VIDEO_ENUM_NO_MORE_DEVICES;
+   }
 
    /*
     * Get Child ID
@@ -284,16 +289,6 @@ VBEGetVideoChildDescriptor(
    else if (VBEReadEdidUsingSCI(HwDeviceExtension, ChildIndex, pChildDescriptor))
    {
       VideoPortDebugPrint(Info, "VBEMP: EDID information read using I²C\n");
-   }
-   else if (ChildEnumInfo->ChildIndex == 1)
-   {
-       /* We must have 1 monitor, so just report it with no EDID information */
-       VideoPortDebugPrint(Info, "VBEMP: Reporting monitor with no EDID information\n");
-   }
-   else
-   {
-      VideoPortDebugPrint(Warn, "VBEMP: Unable to read EDID information\n");
-      return VIDEO_ENUM_NO_MORE_DEVICES;
    }
 
    /*
