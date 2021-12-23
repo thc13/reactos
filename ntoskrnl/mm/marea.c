@@ -492,6 +492,12 @@ MmCreateMemoryArea(PMMSUPPORT AddressSpace,
             {
                 DPRINT("Memory area already occupied\n");
                 if (!(Type & MEMORY_AREA_STATIC)) ExFreePoolWithTag(MemoryArea, TAG_MAREA);
+                if (Type == 0x1 && BaseAddress && *BaseAddress == UlongToPtr(0x000a0000) && Length == 0x20000 && AllocationFlags == 0)
+                {
+                    /* MS videoprt.sys HACK to prevent 'Case B not handled' */
+                    *Result = MmLocateMemoryAreaByRegion(AddressSpace, *BaseAddress, tmpLength);
+                    return STATUS_SUCCESS;
+                }
                 return STATUS_CONFLICTING_ADDRESSES;
             }
         }

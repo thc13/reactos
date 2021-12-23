@@ -4667,6 +4667,24 @@ NtAllocateVirtualMemory(IN HANDLE ProcessHandle,
     DPRINT("NtAllocateVirtualMemory: Process 0x%p, Address 0x%p, Zerobits %lu , RegionSize 0x%x, Allocation type 0x%x, Protect 0x%x.\n",
         Process, PBaseAddress, ZeroBits, PRegionSize, AllocationType, Protect);
 
+    if (PBaseAddress == UlongToPtr(0x00000001) && ZeroBits == 0 && PRegionSize == 0xfffff && AllocationType == MEM_COMMIT && Protect == PAGE_EXECUTE_READWRITE)
+    {
+        /* MS videoprt.sys HACK to prevent 'Case B not handled' */
+        NTSTATUS Status;
+        PVOID BaseAddress;
+        SIZE_T RegionSize;
+
+        BaseAddress = UlongToPtr(0x00000001); RegionSize = 0x9ffff;
+        Status = ZwAllocateVirtualMemory(ProcessHandle, &BaseAddress, 0, &RegionSize, MEM_COMMIT, PAGE_EXECUTE_READWRITE);
+        ASSERT(NT_SUCCESS(Status));
+
+        BaseAddress = UlongToPtr(0x000c0000); RegionSize = 0x3ffff;
+        Status = ZwAllocateVirtualMemory(ProcessHandle, &BaseAddress, 0, &RegionSize, MEM_COMMIT, PAGE_EXECUTE_READWRITE);
+        ASSERT(NT_SUCCESS(Status));
+
+        return STATUS_SUCCESS;
+    }
+
     //
     // Check for large page allocations and make sure that the required privilege
     // is being held, before attempting to handle them.
@@ -5307,6 +5325,12 @@ NtFreeVirtualMemory(IN HANDLE ProcessHandle,
 
     DPRINT("NtFreeVirtualMemory: Process 0x%p, Address 0x%p, Size 0x%Ix, FreeType 0x%08lx\n",
            Process, PBaseAddress, PRegionSize, FreeType);
+
+    if (PBaseAddress == UlongToPtr(0x000a0000) && PRegionSize == 0x20000 && FreeType == MEM_RELEASE)
+    {
+        /* MS videoprt.sys HACK to prevent 'Case B not handled' */
+        return STATUS_SUCCESS;
+    }
 
     //
     // Lock the address space
