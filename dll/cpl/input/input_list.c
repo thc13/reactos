@@ -8,6 +8,8 @@
 
 #include "input_list.h"
 
+#define HOTKEY_WORKAROUND
+
 typedef struct
 {
     PWCHAR FontName;
@@ -251,6 +253,39 @@ InputList_PrepareUserRegistry(VOID)
 
     RegCloseKey(hTempKey);
 
+#ifdef HOTKEY_WORKAROUND
+    if (RegOpenKeyExW(HKEY_USERS,
+                      L".DEFAULT\\Keyboard Layout",
+                      0,
+                      KEY_ALL_ACCESS,
+                      &hKey) == ERROR_SUCCESS)
+    {
+        RegDeleteKeyW(hKey, L"Preload");
+        RegDeleteKeyW(hKey, L"Substitutes");
+
+        RegCloseKey(hKey);
+    }
+
+    if (RegCreateKeyW(HKEY_USERS, L".DEFAULT\\Keyboard Layout", &hKey) != ERROR_SUCCESS)
+    {
+        goto Cleanup;
+    }
+
+    if (RegCreateKeyW(hKey, L"Preload", &hTempKey) != ERROR_SUCCESS)
+    {
+        goto Cleanup;
+    }
+
+    RegCloseKey(hTempKey);
+
+    if (RegCreateKeyW(hKey, L"Substitutes", &hTempKey) != ERROR_SUCCESS)
+    {
+        goto Cleanup;
+    }
+
+    RegCloseKey(hTempKey);
+#endif
+
     bResult = TRUE;
 
 Cleanup:
@@ -300,6 +335,24 @@ InputList_AddInputMethodToUserRegistry(DWORD dwIndex, INPUT_LIST_NODE *pNode)
         RegCloseKey(hKey);
     }
 
+#ifdef HOTKEY_WORKAROUND
+    if (RegOpenKeyExW(HKEY_USERS,
+                      L".DEFAULT\\Keyboard Layout\\Preload",
+                      0,
+                      KEY_SET_VALUE,
+                      &hKey) == ERROR_SUCCESS)
+    {
+        RegSetValueExW(hKey,
+                       szMethodIndex,
+                       0,
+                       REG_SZ,
+                       (LPBYTE)szPreload,
+                       (wcslen(szPreload) + 1) * sizeof(WCHAR));
+
+        RegCloseKey(hKey);
+    }
+#endif
+
     if (pNode->pLocale->dwId != pNode->pLayout->dwId && bIsImeMethod == FALSE)
     {
         if (RegOpenKeyExW(HKEY_CURRENT_USER,
@@ -321,6 +374,29 @@ InputList_AddInputMethodToUserRegistry(DWORD dwIndex, INPUT_LIST_NODE *pNode)
 
             RegCloseKey(hKey);
         }
+
+#ifdef HOTKEY_WORKAROUND
+        if (RegOpenKeyExW(HKEY_USERS,
+                      L".DEFAULT\\Keyboard Layout\\Substitutes",
+                          0,
+                          KEY_SET_VALUE,
+                          &hKey) == ERROR_SUCCESS)
+        {
+            WCHAR szSubstitutes[MAX_PATH];
+
+            StringCchPrintfW(szSubstitutes, ARRAYSIZE(szSubstitutes), L"%08X", pNode->pLayout->dwId);
+
+            RegSetValueExW(hKey,
+                           szPreload,
+                           0,
+                           REG_SZ,
+                           (LPBYTE)szSubstitutes,
+                           (wcslen(szSubstitutes) + 1) * sizeof(WCHAR));
+
+            RegCloseKey(hKey);
+        }
+#endif
+
     }
 
     /*
@@ -344,6 +420,24 @@ InputList_AddInputMethodToUserRegistry(DWORD dwIndex, INPUT_LIST_NODE *pNode)
 
             RegCloseKey(hKey);
         }
+
+#ifdef HOTKEY_WORKAROUND
+        if (RegOpenKeyExW(HKEY_USERS,
+                        L".DEFAULT\\Keyboard Layout\\Toggle",
+                        0,
+                        KEY_SET_VALUE,
+                        &hKey) == ERROR_SUCCESS)
+        {
+            /* 'Hotkey' and 'Layout Hotkey' have always the same value */
+            RegSetValueExW(hKey, L"Hotkey", 0, REG_SZ, (LPBYTE)L"1", (sizeof(L"1")));
+            RegSetValueExW(hKey, L"Language Hotkey", 0, REG_SZ, (LPBYTE)L"1", (sizeof(L"1")));
+
+            RegSetValueExW(hKey, L"Layout Hotkey", 0, REG_SZ, (LPBYTE)L"2", (sizeof(L"2")));
+
+            RegCloseKey(hKey);
+        }
+#endif
+
     }
     /*
      * Deactivate switching language hotkeys, when only one language is registered
@@ -364,6 +458,23 @@ InputList_AddInputMethodToUserRegistry(DWORD dwIndex, INPUT_LIST_NODE *pNode)
 
             RegCloseKey(hKey);
         }
+
+#ifdef HOTKEY_WORKAROUND
+        if (RegOpenKeyExW(HKEY_USERS,
+                        L".DEFAULT\\Keyboard Layout\\Toggle",
+                        0,
+                        KEY_SET_VALUE,
+                        &hKey) == ERROR_SUCCESS)
+        {
+            /* 'Hotkey' and 'Layout Hotkey' have always the same value */
+            RegSetValueExW(hKey, L"Hotkey", 0, REG_SZ, (LPBYTE)L"3", (sizeof(L"3")));
+            RegSetValueExW(hKey, L"Language Hotkey", 0, REG_SZ, (LPBYTE)L"3", (sizeof(L"3")));
+
+            RegSetValueExW(hKey, L"Layout Hotkey", 0, REG_SZ, (LPBYTE)L"3", (sizeof(L"3")));
+
+            RegCloseKey(hKey);
+        }
+#endif
     }
 
     if ((pNode->wFlags & INPUT_LIST_NODE_FLAG_ADDED) ||
