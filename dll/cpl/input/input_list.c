@@ -413,10 +413,10 @@ InputList_AddInputMethodToUserRegistry(DWORD dwIndex, INPUT_LIST_NODE *pNode)
                             &hKey) == ERROR_SUCCESS)
         {
             /* 'Hotkey' and 'Layout Hotkey' have always the same value */
-            RegSetValueExW(hKey, L"Hotkey", 0, REG_SZ, (LPBYTE)L"1", (sizeof(L"1")));
-            RegSetValueExW(hKey, L"Language Hotkey", 0, REG_SZ, (LPBYTE)L"1", (sizeof(L"1")));
+            RegSetValueExW(hKey, L"Hotkey", 0, REG_SZ, (LPBYTE)L"1", sizeof(L"1"));
+            RegSetValueExW(hKey, L"Language Hotkey", 0, REG_SZ, (LPBYTE)L"1", sizeof(L"1"));
 
-            RegSetValueExW(hKey, L"Layout Hotkey", 0, REG_SZ, (LPBYTE)L"2", (sizeof(L"2")));
+            RegSetValueExW(hKey, L"Layout Hotkey", 0, REG_SZ, (LPBYTE)L"2", sizeof(L"2"));
 
             RegCloseKey(hKey);
         }
@@ -429,10 +429,10 @@ InputList_AddInputMethodToUserRegistry(DWORD dwIndex, INPUT_LIST_NODE *pNode)
                         &hKey) == ERROR_SUCCESS)
         {
             /* 'Hotkey' and 'Layout Hotkey' have always the same value */
-            RegSetValueExW(hKey, L"Hotkey", 0, REG_SZ, (LPBYTE)L"1", (sizeof(L"1")));
-            RegSetValueExW(hKey, L"Language Hotkey", 0, REG_SZ, (LPBYTE)L"1", (sizeof(L"1")));
+            RegSetValueExW(hKey, L"Hotkey", 0, REG_SZ, (LPBYTE)L"1", sizeof(L"1"));
+            RegSetValueExW(hKey, L"Language Hotkey", 0, REG_SZ, (LPBYTE)L"1", sizeof(L"1"));
 
-            RegSetValueExW(hKey, L"Layout Hotkey", 0, REG_SZ, (LPBYTE)L"2", (sizeof(L"2")));
+            RegSetValueExW(hKey, L"Layout Hotkey", 0, REG_SZ, (LPBYTE)L"2", sizeof(L"2"));
 
             RegCloseKey(hKey);
         }
@@ -451,10 +451,10 @@ InputList_AddInputMethodToUserRegistry(DWORD dwIndex, INPUT_LIST_NODE *pNode)
                             &hKey) == ERROR_SUCCESS)
         {
             /* 'Hotkey' and 'Layout Hotkey' have always the same value */
-            RegSetValueExW(hKey, L"Hotkey", 0, REG_SZ, (LPBYTE)L"3", (sizeof(L"3")));
-            RegSetValueExW(hKey, L"Language Hotkey", 0, REG_SZ, (LPBYTE)L"3", (sizeof(L"3")));
+            RegSetValueExW(hKey, L"Hotkey", 0, REG_SZ, (LPBYTE)L"3", sizeof(L"3"));
+            RegSetValueExW(hKey, L"Language Hotkey", 0, REG_SZ, (LPBYTE)L"3", sizeof(L"3"));
 
-            RegSetValueExW(hKey, L"Layout Hotkey", 0, REG_SZ, (LPBYTE)L"3", (sizeof(L"3")));
+            RegSetValueExW(hKey, L"Layout Hotkey", 0, REG_SZ, (LPBYTE)L"3", sizeof(L"3"));
 
             RegCloseKey(hKey);
         }
@@ -467,10 +467,10 @@ InputList_AddInputMethodToUserRegistry(DWORD dwIndex, INPUT_LIST_NODE *pNode)
                         &hKey) == ERROR_SUCCESS)
         {
             /* 'Hotkey' and 'Layout Hotkey' have always the same value */
-            RegSetValueExW(hKey, L"Hotkey", 0, REG_SZ, (LPBYTE)L"3", (sizeof(L"3")));
-            RegSetValueExW(hKey, L"Language Hotkey", 0, REG_SZ, (LPBYTE)L"3", (sizeof(L"3")));
+            RegSetValueExW(hKey, L"Hotkey", 0, REG_SZ, (LPBYTE)L"3", sizeof(L"3"));
+            RegSetValueExW(hKey, L"Language Hotkey", 0, REG_SZ, (LPBYTE)L"3", sizeof(L"3"));
 
-            RegSetValueExW(hKey, L"Layout Hotkey", 0, REG_SZ, (LPBYTE)L"3", (sizeof(L"3")));
+            RegSetValueExW(hKey, L"Layout Hotkey", 0, REG_SZ, (LPBYTE)L"3", sizeof(L"3"));
 
             RegCloseKey(hKey);
         }
