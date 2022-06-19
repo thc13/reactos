@@ -1873,8 +1873,8 @@ BOOL co_IntProcessKeyboardMessage(MSG* Msg, BOOL* RemoveMessages)
 
         if (gdwLanguageToggleKey < 3)
         {
-            LanguageHotkey = gdwLanguageToggleKey == 1 ? VK_LMENU : VK_CONTROL;
-            if(IS_KEY_DOWN(gafAsyncKeyState, LanguageHotkey) ||
+            LanguageHotkey = ((gdwLanguageToggleKey == 1) ? VK_LMENU : VK_CONTROL);
+            if (IS_KEY_DOWN(gafAsyncKeyState, LanguageHotkey) ||
                IS_KEY_DOWN(gafAsyncKeyState, VK_SHIFT))
             {
                if (Msg->wParam == VK_SHIFT && !(IS_KEY_DOWN(gafAsyncKeyState, VK_SHIFT)))
@@ -1883,8 +1883,8 @@ BOOL co_IntProcessKeyboardMessage(MSG* Msg, BOOL* RemoveMessages)
                }
                else
                {
-                  if ( wParam == VK_LMENU && wParam == LanguageHotkey
-                       && !(IS_KEY_DOWN(gafAsyncKeyState, VK_LMENU)) )
+                  if (wParam == VK_LMENU && wParam == LanguageHotkey &&
+                      !(IS_KEY_DOWN(gafAsyncKeyState, VK_LMENU)) )
                   {
                      if ( IS_KEY_DOWN(gafAsyncKeyState, VK_LSHIFT) )
                         gLanguageToggleKeyState = INPUTLANGCHANGE_FORWARD;  // Left Alt - Left Shift, Next
@@ -1893,8 +1893,8 @@ BOOL co_IntProcessKeyboardMessage(MSG* Msg, BOOL* RemoveMessages)
 
                      bChangeLanguage = TRUE;
                   }
-                  else if ( Msg->wParam == VK_CONTROL && Msg->wParam == LanguageHotkey
-                           && !(IS_KEY_DOWN(gafAsyncKeyState, VK_CONTROL)) )
+                  else if (Msg->wParam == VK_CONTROL && Msg->wParam == LanguageHotkey &&
+                           !(IS_KEY_DOWN(gafAsyncKeyState, VK_CONTROL)) )
                   {
                      if ( IS_KEY_DOWN(gafAsyncKeyState, VK_LSHIFT) )
                         gLanguageToggleKeyState = INPUTLANGCHANGE_FORWARD;  // Left Alt - Left Shift, Next
